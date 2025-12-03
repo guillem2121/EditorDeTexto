@@ -1,0 +1,109 @@
+
+.root {
+    -fx-background-color: linear-gradient(to bottom right, #aaf6df, #f5f5f5); /* Fondo claro predeterminado */
+    -fx-font-family: "Segoe UI", "Roboto", "Arial", sans-serif;
+    -fx-text-fill: #222222;
+}
+
+
+/* --- Etiquetas, textos y títulos --- */
+.label {
+    -fx-text-fill: #444444;
+    -fx-font-size: 13px;
+    -fx-font-weight: 600;
+}
+
+.title-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: linear-gradient(to right, #6A11CB, #2575FC); /* degradado violeta-azul */
+}
+
+/* --- Campos de texto --- */
+.text-field, .text-area {
+    -fx-background-color: rgba(255,255,255,0.8);
+    -fx-border-color: #d0d0d0;
+    -fx-border-width: 1px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-padding: 8px 10px;
+    -fx-text-fill: #333333;
+    -fx-prompt-text-fill: #888888;
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+/* Efecto al enfocar */
+.text-area:focused {
+    -fx-border-color: #6A11CB;
+    -fx-effect: dropshadow(gaussian, rgba(106,17,203,0.3), 10, 0.4, 0, 0);
+    -fx-background-color: white;
+}
+
+/* --- Botones coloridos y modernos --- */
+.button {
+    -fx-background-color: linear-gradient(to right, #00C9FF, #12bdda);
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-background-radius: 25px;
+    -fx-border-radius: 25px;
+    -fx-cursor: hand;
+    -fx-font-size: 13px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0.3, 0, 1);
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(to right, #84FAB0, #8FD3F4);
+    -fx-effect: dropshadow(gaussian, rgba(132,250,176,0.4), 10, 0.4, 0, 1);
+}
+
+.button:pressed {
+    -fx-background-color: #57CC99;
+}
+
+
+.menu-button:hover {
+    -fx-background-color: linear-gradient(to right, #FF9A8B, #FF6A88, #FF99AC);
+}
+
+.menu-item {
+    -fx-background-color: transparent;
+    -fx-text-fill: #333333;
+}
+
+.menu-item:hover {
+    -fx-background-color: #E4E4E4;
+}
+
+/* --- Scrollbars minimalistas --- */
+.scroll-bar:vertical, .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: linear-gradient(to bottom, #A1C4FD, #C2E9FB);
+    -fx-background-radius: 5;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: linear-gradient(to bottom, #89F7FE, #66A6FF);
+}
+
+/* --- Área de texto principal --- */
+.text-area {
+    -fx-font-size: 14px;
+    -fx-line-spacing: 2px;
+    -fx-background-insets: 0;
+    -fx-control-inner-background: rgba(255,255,255,0.9);
+}
+
+
+#labelCaracteres {
+    -fx-text-fill: #6A11CB;
+    -fx-font-weight: bold;
+}
+
+#labelPalabras {
+    -fx-text-fill: #22C1C3;
+    -fx-font-weight: bold;
+}
