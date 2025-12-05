@@ -1,6 +1,5 @@
-package com.example.practica3editordetexto.editor.controller;
+package com.example.practica3editordetexto;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -8,36 +7,32 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
-// --- IMPORTS DE TU ESTRUCTURA (Asegúrate que coinciden) ---
-import com.example.practica3editordetexto.view.ProgressLabel;
-import com.example.practica3editordetexto.nui.VoskVoiceRecognizer;
-import com.example.practica3editordetexto.nui.NuiListener;
-import com.example.practica3editordetexto.nui.NuiCommand;
+import com.example.practica3editordetexto.ProgressLabel;
 
 import java.io.*;
 import java.nio.file.Files;
 
-import static com.example.practica3editordetexto.nui.NuiCommand.*;
-
-// 1. AÑADIDO: implements NuiListener
-public abstract class HelloController implements NuiListener {
+public class HelloController {
 
     // --- Conexiones con el FXML ---
-    @FXML private TextArea areaTextoPrincipal;
-    @FXML private Label labelCaracteres;
-    @FXML private Label labelPalabras;
+    @FXML
+    private TextArea areaTextoPrincipal;
+
+    @FXML
+    private Label labelCaracteres;
+
+    @FXML
+    private Label labelPalabras;
+
     @FXML private ProgressLabel componenteProgreso;
-
-    // 2. AÑADIDO: Variable para el reconocedor
-    private VoskVoiceRecognizer voiceRecognizer;
-
     private static final long SIZE_THRESHOLD_BYTES = 1024;
+
 
     // --- Lógica de la Aplicación ---
 
     @FXML
     public void initialize() {
+
         componenteProgreso.setState(ProgressLabel.State.IDLE);
         componenteProgreso.setProgress(0.0);
 
@@ -48,53 +43,6 @@ public abstract class HelloController implements NuiListener {
 
         // Inicializamos los contadores.
         actualizarContadores(areaTextoPrincipal.getText());
-
-        // 3. AÑADIDO: INICIALIZAR VOSK
-        try {
-            // Le pasamos 'this' porque esta clase ahora es el Listener
-            voiceRecognizer = new VoskVoiceRecognizer(this);
-            voiceRecognizer.startListening();
-            System.out.println("INFO: Sistema de voz iniciado en el Controlador.");
-        } catch (Exception e) {
-            System.err.println("ERROR: No se pudo iniciar el reconocimiento de voz.");
-            e.printStackTrace();
-        }
-    }
-
-    // 4. AÑADIDO: IMPLEMENTACIÓN DE NuiListener (CEREBRO DE LA VOZ)
-    @Override
-    public void onCommand(NuiCommand command, String payload) {
-        // IMPORTANTE: Vosk corre en otro hilo. Para tocar la UI usamos Platform.runLater
-        Platform.runLater(() -> {
-            System.out.println("Ejecutando acción por voz: " + command);
-
-            switch (command) {
-                case NUEVO_DOCUMENTO:
-                    limpiarTexto(null);
-                    break;
-                case ABRIR_DOCUMENTO:
-                    importMethod(null);
-                    break;
-                case GUARDAR_DOCUMENTO:
-                    exportMethod(null);
-                    break;
-                case NEGRITA:
-                    aplicarNegrita(null);
-                    break;
-                case CURSIVA:
-                    aplicarCursiva(null);
-                    break;
-                default:
-                    System.out.println("Comando recibido pero no implementado: " + command);
-            }
-        });
-    }
-
-    // 5. AÑADIDO: Método para cerrar el micro limpiamente
-    public void stopVoice() {
-        if (voiceRecognizer != null) {
-            voiceRecognizer.stop();
-        }
     }
 
     /**
@@ -228,9 +176,6 @@ public abstract class HelloController implements NuiListener {
                 new FileChooser.ExtensionFilter("Archivo Markdown (*.md)", "*.md")
         );
 
-        // Protección: Si se llama por voz antes de que la ventana exista (raro, pero posible)
-        if (areaTextoPrincipal.getScene() == null) return null;
-
         Stage stage = (Stage) areaTextoPrincipal.getScene().getWindow();
 
         if (esGuardar) {
@@ -302,9 +247,13 @@ public abstract class HelloController implements NuiListener {
         areaTextoPrincipal.setStyle(style.toString());
     }
 
+
+
     //Devolver el estilo original
     @FXML
     public void revertStyles(ActionEvent event) {
         areaTextoPrincipal.setStyle("");
+
     }
+
 }
