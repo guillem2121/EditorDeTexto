@@ -6,22 +6,25 @@ import org.vosk.Model;
 import org.vosk.Recognizer;
 
 import javax.sound.sampled.*;
+import java.io.IOException;
 
 public class VoskVoiceRecognizer {
 
     private NuiListener listener;
     private boolean running = false;
+    private Recognizer recognizer; // Added member variable
 
     public VoskVoiceRecognizer(NuiListener listener) {
         this.listener = listener;
+        LibVosk.setLogLevel(LogLevel.WARNINGS); // Set log level
     }
 
     public void startListening() {
         new Thread(() -> {
             try {
                 Model model = new Model("model-es");
-
                 // 2. Crear el reconocedor
+                recognizer = new Recognizer(model, 16000); // Initialized recognizer
 
                 // 3. Configurar el micrófono
                 AudioFormat format = new AudioFormat(16000, 16, 1, true, false);
@@ -42,10 +45,13 @@ public class VoskVoiceRecognizer {
                             String jsonResult = recognizer.getResult();
                             procesarTexto(jsonResult);
                         } else {
+                            // recognizer.getPartialResult(); // Optional
                         }
                     }
                 }
                 microphone.close();
+                recognizer.close(); // Clean up
+                model.close(); // Clean up
 
             } catch (Exception e) {
                 e.printStackTrace();

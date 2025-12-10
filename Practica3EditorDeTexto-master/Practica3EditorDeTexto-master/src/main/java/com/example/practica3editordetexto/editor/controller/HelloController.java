@@ -1,5 +1,9 @@
-package com.example.practica3editordetexto;
+package com.example.practica3editordetexto.editor.controller;
 
+import com.example.practica3editordetexto.nui.NuiCommand;
+import com.example.practica3editordetexto.nui.NuiListener;
+import com.example.practica3editordetexto.nui.VoskVoiceRecognizer;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -7,12 +11,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import com.example.practica3editordetexto.ProgressLabel;
+import com.example.practica3editordetexto.view.ProgressLabel;
 
 import java.io.*;
 import java.nio.file.Files;
 
-public class HelloController {
+public class HelloController implements NuiListener {
 
     // --- Conexiones con el FXML ---
     @FXML
@@ -24,9 +28,11 @@ public class HelloController {
     @FXML
     private Label labelPalabras;
 
-    @FXML private ProgressLabel componenteProgreso;
+    @FXML
+    private ProgressLabel componenteProgreso;
     private static final long SIZE_THRESHOLD_BYTES = 1024;
 
+    private VoskVoiceRecognizer vozRecorder;
 
     // --- Lógica de la Aplicación ---
 
@@ -43,13 +49,18 @@ public class HelloController {
 
         // Inicializamos los contadores.
         actualizarContadores(areaTextoPrincipal.getText());
+
+        // Inicializar reconocimiento de voz
+        vozRecorder = new VoskVoiceRecognizer(this);
+        vozRecorder.startListening();
     }
 
     /**
      * Actualiza los contadores de caracteres y palabras.
      */
     private void actualizarContadores(String texto) {
-        if (texto == null) texto = "";
+        if (texto == null)
+            texto = "";
 
         int caracteres = texto.length();
         int palabras = 0;
@@ -91,17 +102,24 @@ public class HelloController {
         areaTextoPrincipal.setText(texto.trim().replaceAll("\\s+", " "));
     }
 
-
     // --- Métodos de Estilo ---
 
     @FXML
     public void aplicarNegrita(ActionEvent event) {
-        areaTextoPrincipal.setStyle("-fx-font-weight: bold;");
+        if (areaTextoPrincipal.getStyle().contains("bold")) {
+            areaTextoPrincipal.setStyle(areaTextoPrincipal.getStyle().replace("-fx-font-weight: bold;", ""));
+        } else {
+            areaTextoPrincipal.setStyle(areaTextoPrincipal.getStyle() + "-fx-font-weight: bold;");
+        }
     }
 
     @FXML
     public void aplicarCursiva(ActionEvent event) {
-        areaTextoPrincipal.setStyle("-fx-font-style: italic;");
+        if (areaTextoPrincipal.getStyle().contains("italic")) {
+            areaTextoPrincipal.setStyle(areaTextoPrincipal.getStyle().replace("-fx-font-style: italic;", ""));
+        } else {
+            areaTextoPrincipal.setStyle(areaTextoPrincipal.getStyle() + "-fx-font-style: italic;");
+        }
     }
 
     // --- Métodos Undo y Redo (Ahora funcionarán correctamente) ---
@@ -145,7 +163,8 @@ public class HelloController {
     public void importMethod(ActionEvent event) {
         File archivo = mostrarSelectorArchivos("Abrir archivo", false);
 
-        if (archivo == null) return;
+        if (archivo == null)
+            return;
 
         try {
             // 1. Simular proceso
@@ -173,8 +192,7 @@ public class HelloController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(titulo);
         fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Archivo Markdown (*.md)", "*.md")
-        );
+                new FileChooser.ExtensionFilter("Archivo Markdown (*.md)", "*.md"));
 
         Stage stage = (Stage) areaTextoPrincipal.getScene().getWindow();
 
@@ -218,11 +236,15 @@ public class HelloController {
         boolean esCursiva = estiloActual.contains("italic");
 
         StringBuilder md = new StringBuilder();
-        if (esNegrita) md.append("**");
-        if (esCursiva) md.append("*");
+        if (esNegrita)
+            md.append("**");
+        if (esCursiva)
+            md.append("*");
         md.append(texto);
-        if (esCursiva) md.append("*");
-        if (esNegrita) md.append("**");
+        if (esCursiva)
+            md.append("*");
+        if (esNegrita)
+            md.append("**");
 
         return md.toString();
     }
@@ -241,19 +263,44 @@ public class HelloController {
 
         // Aplicar estilo al TextArea completo
         StringBuilder style = new StringBuilder();
-        if (negrita) style.append("-fx-font-weight: bold;");
-        if (cursiva) style.append("-fx-font-style: italic;");
+        if (negrita)
+            style.append("-fx-font-weight: bold;");
+        if (cursiva)
+            style.append("-fx-font-style: italic;");
 
         areaTextoPrincipal.setStyle(style.toString());
     }
 
-
-
-    //Devolver el estilo original
+    // Devolver el estilo original
     @FXML
     public void revertStyles(ActionEvent event) {
         areaTextoPrincipal.setStyle("");
 
+    }
+
+    @Override
+    public void onCommand(NuiCommand command, String payload) {
+        Platform.runLater(() -> {
+            switch (command) {
+                case NUEVO_DOCUMENTO:
+                    limpiarTexto(null);
+                    break;
+                case ABRIR_DOCUMENTO:
+                    importMethod(null);
+                    break;
+                case GUARDAR_DOCUMENTO:
+                    exportMethod(null);
+                    break;
+                case NEGRITA:
+                    aplicarNegrita(null);
+                    break;
+                case CURSIVA:
+                    aplicarCursiva(null);
+                    break;
+                default:
+                    System.out.println("Comando desconocido: " + command);
+            }
+        });
     }
 
 }
