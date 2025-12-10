@@ -79,9 +79,9 @@ public class VoskVoiceRecognizer {
             comandoDetectado = NuiCommand.NEGRITA;
         } else if (texto.contains("cursiva")) {
             comandoDetectado = NuiCommand.CURSIVA;
-        } else if (texto.contains("mayúsculas") || texto.contains("mayusculas")) {
+        } else if (texto.contains("mayúsculas") || texto.contains("mayúsculas")) {
             comandoDetectado = NuiCommand.MAYUSCULAS;
-        } else if (texto.contains("minúsculas") || texto.contains("minusculas")) {
+        } else if (texto.contains("minúsculas") || texto.contains("minúsculas")) {
             comandoDetectado = NuiCommand.MINUSCULAS;
         } else if (texto.contains("invertir")) {
             comandoDetectado = NuiCommand.INVERTIR_TEXTO;
