@@ -79,6 +79,22 @@ public class VoskVoiceRecognizer {
             comandoDetectado = NuiCommand.NEGRITA;
         } else if (texto.contains("cursiva")) {
             comandoDetectado = NuiCommand.CURSIVA;
+        } else if (texto.contains("mayúsculas") || texto.contains("mayusculas")) {
+            comandoDetectado = NuiCommand.MAYUSCULAS;
+        } else if (texto.contains("minúsculas") || texto.contains("minusculas")) {
+            comandoDetectado = NuiCommand.MINUSCULAS;
+        } else if (texto.contains("invertir")) {
+            comandoDetectado = NuiCommand.INVERTIR_TEXTO;
+        } else if (texto.contains("limpiar") || texto.contains("borrar")) {
+            comandoDetectado = NuiCommand.LIMPIAR;
+        } else if (texto.contains("eliminar espacios") || texto.contains("quitar espacios")) {
+            comandoDetectado = NuiCommand.ELIMINAR_ESPACIOS;
+        } else if (texto.contains("revertir") || texto.contains("restaurar estilos")) {
+            comandoDetectado = NuiCommand.REVERTIR_ESTILOS;
+        } else if (texto.contains("deshacer") || texto.contains("undo")) {
+            comandoDetectado = NuiCommand.DESHACER;
+        } else if (texto.contains("rehacer") || texto.contains("redo")) {
+            comandoDetectado = NuiCommand.REHACER;
         }
 
         if (comandoDetectado != NuiCommand.DESCONOCIDO) {

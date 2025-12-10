@@ -297,6 +297,30 @@ public class HelloController implements NuiListener {
                 case CURSIVA:
                     aplicarCursiva(null);
                     break;
+                case MAYUSCULAS:
+                    convertirMayusculas(null);
+                    break;
+                case MINUSCULAS:
+                    convertirMinusculas(null);
+                    break;
+                case INVERTIR_TEXTO:
+                    invertirTexto(null);
+                    break;
+                case LIMPIAR:
+                    limpiarTexto(null);
+                    break;
+                case ELIMINAR_ESPACIOS:
+                    eliminarEspacios(null);
+                    break;
+                case REVERTIR_ESTILOS:
+                    revertStyles(null);
+                    break;
+                case DESHACER:
+                    undoMetodo(null);
+                    break;
+                case REHACER:
+                    redoMetodo(null);
+                    break;
                 default:
                     System.out.println("Comando desconocido: " + command);
             }
